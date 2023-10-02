@@ -1,0 +1,139 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                String        @id @default(cuid())
+  name              String?
+  email             String?       @unique
+  password          String
+  role              UserRole
+  status            UserStatus
+  created_on        DateTime      @default(now())
+  updated_on        DateTime?  
+  is_teacher        Boolean
+  bio               String
+  is_bio_public     Boolean
+  moderator_notes   Json
+  entries           Entry[]
+  favourite_entries FavouriteEntry[]
+  comments          Comment[]
+  reports           Report[]
+  support_tickets   Support_Ticket[]
+}
+
+model Entry {
+  id                  String              @id @default(cuid())
+  user_id             String
+  type                EntryType
+  user                User                @relation(fields: [user_id], references: [id])
+  favorite_entries    FavouriteEntry[]
+  created_on          DateTime            @default(now())
+  updated_on          DateTime?
+  comments            Comment[]
+  reports             Report[]            @relation("reportedEntry") 
+  status              ContentStatus
+  teaching_points     String[]
+  stroke              EntryStroke
+  stage               String[]
+}
+
+model FavouriteEntry {
+  user        User      @relation(fields: [user_id], references: [id])
+  user_id     String 
+  entry       Entry     @relation(fields: [entry_id], references: [id])
+  entry_id    String 
+
+  @@id([user_id, entry_id])
+}
+
+model Comment {
+  id                    String          @id @default(cuid())
+  user_id               String
+  user                  User            @relation(fields: [user_id], references: [id])
+  entry_id              String
+  entry                 Entry           @relation(fields:[entry_id], references: [id])
+  content               String
+  created_on            DateTime
+  updated_on            DateTime?
+  status                ContentStatus
+  reports               Report[]        @relation("reportedComment")
+  parent_comment_id     String?         @unique
+  parent_comment        Comment?        @relation("commentReplies", fields: [parent_comment_id], references: [id])
+  reply_comment         Comment?        @relation("commentReplies") 
+}
+
+model Report {
+  id                  String          @id @default(cuid())
+  reported_by_id      String
+  user                User            @relation( fields: [reported_by_id], references: [id])
+  entry_id            String?
+  comment_id          String?
+  entry               Entry?          @relation("reportedEntry", fields: [entry_id], references: [id])
+  comment             Comment?        @relation("reportedComment", fields: [comment_id], references: [id])
+  message             String
+  created_on          DateTime        @default(now())
+  updated_on          DateTime?
+  status              TicketStatus
+  moderator_notes     Json
+}
+
+model Support_Ticket {
+  id                  String            @id @default(cuid())
+  user_id             String
+  user                User              @relation(fields: [user_id], references: [id])
+  message             String
+  created_on          DateTime          @default(now())
+  updated_on          DateTime?
+  status              TicketStatus
+  moderator_notes     Json
+}
+
+enum TicketStatus {
+  unread
+  open
+  closed
+}
+
+enum ContentStatus {
+  public
+  private
+  deleted
+}
+
+enum EntryStroke {
+  frontcrawl
+  backcrawl
+  breastroke
+  butterfly
+  general
+}
+
+enum EntryType {
+  tip
+  exercise
+  lesson_plan
+}
+
+enum UserRole {
+  user
+  moderator
+  admin
+}
+
+enum UserStatus {
+  inactive
+  active
+  muted
+  banned
+  deleted
+  locked
+}
