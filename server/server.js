@@ -30,6 +30,7 @@ app.use(
     secret: process.env.SECRET,
     saveUninitialized: false,
     resave: false,
+    name: 'sessionId',
     cookie: {
       secure: false, //if true, only transmit cookie over https
       httpOnly: true, //if true, prevents client side JS from reading cookie
@@ -40,14 +41,6 @@ app.use(
 
 //routes
 app.use('/api/user', userRoutes);
-
-app.post('/login', (req, res) => {
-  const { email, password } = req;
-
-  req.session.clientId = 'abc123';
-  req.session.myNum = 5;
-  res.json('you are now logged in');
-});
 
 await redisClient.connect();
 
