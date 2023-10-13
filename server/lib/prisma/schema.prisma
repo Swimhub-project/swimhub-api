@@ -12,8 +12,9 @@ datasource db {
 
 model User {
   id                String        @id @default(cuid())
-  name              String?
-  email             String?       @unique
+  name              String
+  user_name         String?
+  email             String        @unique
   password          String
   role              UserRole
   status            UserStatus
@@ -22,7 +23,7 @@ model User {
   is_teacher        Boolean
   bio               String
   is_bio_public     Boolean
-  moderator_notes   Json
+  moderator_notes   Json?
   entries           Entry[]
   favourite_entries FavouriteEntry[]
   comments          Comment[]
