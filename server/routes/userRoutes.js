@@ -1,6 +1,10 @@
 //import packages
 import express from 'express';
-import { signInUser, signUpUser } from '../controllers/userController.js';
+import {
+  signInUser,
+  signUpUser,
+  verifyEmail,
+} from '../controllers/userController.js';
 import { authenticate } from '../middleware/requireAuth.js';
 
 //initialise express router
@@ -11,6 +15,9 @@ router.post('/signin', signInUser);
 
 //sign up route
 router.post('/signup', signUpUser);
+
+//verify email route
+router.post('/verify/:id/:token', verifyEmail);
 
 //all routes that come after this middleware are protected.
 //can only be access if the user is logged in.

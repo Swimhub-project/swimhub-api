@@ -10,6 +10,15 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model AuthToken {
+  id          String @id @default(cuid())
+  user_id     String @unique
+  User User   @relation(fields: [user_id], references:[id])
+  created_on  DateTime
+  expires_on  DateTime
+  token       String
+}
+
 model User {
   id                String        @id @default(cuid())
   name              String
@@ -29,6 +38,7 @@ model User {
   comments          Comment[]
   reports           Report[]
   support_tickets   Support_Ticket[]
+  AuthToken         AuthToken?
 }
 
 model Entry {

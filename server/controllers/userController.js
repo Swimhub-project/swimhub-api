@@ -2,6 +2,7 @@
 import validator from 'validator';
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
+import crypto from 'crypto';
 
 const { isEmail, isEmpty, isStrongPassword, normalizeEmail, escape } =
   validator;
@@ -198,13 +199,90 @@ export const signUpUser = async (req, res) => {
   try {
     const newUser = await prisma.user.create({ data: newUserData });
     if (newUser) {
-      //TODO create better session data for user
-      req.session.clientId = 'abc123';
-      req.session.myNum = 5;
-      //TODO send confirmation email to user
+      //TODO send email verification to user
+
+      //create token and store in database
+      const token = crypto.randomBytes(32).toString('hex');
+
+      const tokenData = {
+        user_id: newUser.id,
+        created_on: new Date(),
+        expires_on: new Date(new Date().getTime() + 24 * 60 * 60 * 1000),
+        //token expires 24 hours after creation
+        toekn: token,
+      };
+      try {
+        await prisma.AuthToken.create({ data: tokenData });
+      } catch (error) {
+        res.status(500).json({ error: { message: error.message, fields: [] } });
+      }
 
       res.status(201).json({ message: 'new user created' });
     }
+  } catch (error) {
+    res.status(500).json({ error: { message: error.message, fields: [] } });
+  }
+};
+
+//verify email
+export const verifyEmail = async (req, res) => {
+  //grab userId and token params from url
+  const userId = req.params.id;
+  const token = req.params.token;
+
+  //search for auth token in database
+  const userToken = await AuthToken.findUnique({ where: { userId: userId } });
+  if (!userToken) {
+    res.status(404).json({
+      error: { message: 'token not found' },
+      fields: ['token'],
+    });
+  }
+
+  //check expire date of token
+  const today = new Date();
+  if (userToken.expires_on < today) {
+    res.status(500).json({
+      error: { message: 'token has expired' },
+      fields: ['token'],
+    });
+  }
+
+  //search for user in database
+  const user = await prisma.user.findUnique({ where: { id: userId } });
+  if (!user) {
+    res.status(404).json({
+      error: { message: 'user not found' },
+      fields: ['userId'],
+    });
+  }
+
+  //check user status
+  if (user.status != 'inactive') {
+    //delete token from database
+    await prisma.AuthToken.delete({ where: { token: token } });
+
+    res.status(500).json({
+      error: { message: 'user already verified' },
+      fields: [],
+    });
+  }
+
+  //update user status and sign user in
+  try {
+    updatedUser = await prisma.user.update({
+      where: { id: userId },
+      data: { status: 'active' },
+    });
+
+    //delete token from database
+    await prisma.AuthToken.delete({ where: { token: token } });
+
+    //TODO create better session data for user
+    req.session.clientId = 'abc123';
+    req.session.myNum = 5;
+
+    res.status(200).json({ message: 'verification successful' });
   } catch (error) {
     res.status(500).json({ error: { message: error.message, fields: [] } });
   }
