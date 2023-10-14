@@ -118,6 +118,7 @@ export const signUpUser = async (req, res) => {
     res.status(400).json({
       error: { message: 'missing body parameters', fields: missingParams },
     });
+    return;
   }
 
   //check empty fields
@@ -138,6 +139,7 @@ export const signUpUser = async (req, res) => {
     res.status(400).json({
       error: { message: 'Please fill in all fields', fields: emptyFields },
     });
+    return;
   }
 
   //check email
@@ -156,6 +158,7 @@ export const signUpUser = async (req, res) => {
         fields: ['password'],
       },
     });
+    return;
   }
 
   //check passwords match
@@ -164,6 +167,7 @@ export const signUpUser = async (req, res) => {
       error: { message: 'Passwords do not match' },
       fields: ['password, repeat password'],
     });
+    return;
   }
 
   //sanitise inputs
@@ -179,6 +183,7 @@ export const signUpUser = async (req, res) => {
     res
       .status(400)
       .json({ error: { message: 'Email already exists', fields: ['email'] } });
+    return;
   }
 
   //hash password
@@ -214,33 +219,34 @@ export const signUpUser = async (req, res) => {
         await prisma.AuthToken.create({ data: tokenData });
       } catch (error) {
         res.status(500).json({ error: { message: error.message, fields: [] } });
+        return;
       }
 
-      res.status(201).json({ message: 'new user created' });
-    }
-  } catch (error) {
-    res.status(500).json({ error: { message: error.message, fields: [] } });
-  }
-  //send email verification to user
-  try {
-    const recipient = newUser.email;
-    const subject = 'Verify your email address';
-    const text = `
+      //send email verification to user
+      try {
+        const recipient = newUser.email;
+        const subject = 'Verify your email address';
+        const text = `
       Hi ${newUser.name}. Thank you for joining Swimhub. 
       Please verify your email address by clicking the 
       following link: http://localhost:5000/api/user/verify/${newUser.id}/${tokenData.token}. 
       If this wasn't you, you can safely delete this email.
     `;
-    const html = `
+        const html = `
       Hi ${newUser.name}. <br/><br/>Thank you for joining Swimhub. 
       Please verify your email address by clicking the 
       following link: <br/><br/><a href="http://localhost:5000/api/user/verify/${newUser.id}/${tokenData.token}">VERIFY</a>. 
       <br/><br/>If this wasn't you, you can safely delete this email.
     `;
-
-    await sendEmail(recipient, subject, text, html);
+        await sendEmail(recipient, subject, text, html);
+      } catch (error) {
+        res.status(500).json({ error: { message: error.message, fields: [] } });
+      }
+    }
+    res.status(201).json({ message: 'new user created' });
   } catch (error) {
     res.status(500).json({ error: { message: error.message, fields: [] } });
+    return;
   }
 };
 
@@ -251,7 +257,9 @@ export const verifyEmail = async (req, res) => {
   const token = req.params.token;
 
   //search for auth token in database
-  const userToken = await AuthToken.findUnique({ where: { userId: userId } });
+  const userToken = await prisma.AuthToken.findUnique({
+    where: { user_id: userId },
+  });
   if (!userToken) {
     res.status(404).json({
       error: { message: 'token not found' },
@@ -280,7 +288,7 @@ export const verifyEmail = async (req, res) => {
   //check user status
   if (user.status != 'inactive') {
     //delete token from database
-    await prisma.AuthToken.delete({ where: { token: token } });
+    await prisma.AuthToken.delete({ where: { user_id: user.id } });
 
     res.status(500).json({
       error: { message: 'user already verified' },
@@ -290,13 +298,13 @@ export const verifyEmail = async (req, res) => {
 
   //update user status and sign user in
   try {
-    updatedUser = await prisma.user.update({
+    updatedUser = await prisma.User.update({
       where: { id: userId },
       data: { status: 'active' },
     });
 
     //delete token from database
-    await prisma.AuthToken.delete({ where: { token: token } });
+    await prisma.AuthToken.delete({ where: { user_id: updatedUser.id } });
 
     //TODO create better session data for user
     req.session.clientId = 'abc123';

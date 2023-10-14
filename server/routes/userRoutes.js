@@ -17,7 +17,7 @@ router.post('/signin', signInUser);
 router.post('/signup', signUpUser);
 
 //verify email route
-router.post('/verify/:id/:token', verifyEmail);
+router.get('/verify/:id/:token', verifyEmail);
 
 //all routes that come after this middleware are protected.
 //can only be access if the user is logged in.
