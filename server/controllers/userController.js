@@ -3,6 +3,7 @@ import validator from 'validator';
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
 import crypto from 'crypto';
+import { sendEmail } from '../services/email.js';
 
 const { isEmail, isEmpty, isStrongPassword, normalizeEmail, escape } =
   validator;
@@ -199,8 +200,6 @@ export const signUpUser = async (req, res) => {
   try {
     const newUser = await prisma.user.create({ data: newUserData });
     if (newUser) {
-      //TODO send email verification to user
-
       //create token and store in database
       const token = crypto.randomBytes(32).toString('hex');
 
@@ -209,7 +208,7 @@ export const signUpUser = async (req, res) => {
         created_on: new Date(),
         expires_on: new Date(new Date().getTime() + 24 * 60 * 60 * 1000),
         //token expires 24 hours after creation
-        toekn: token,
+        token: token,
       };
       try {
         await prisma.AuthToken.create({ data: tokenData });
@@ -219,6 +218,27 @@ export const signUpUser = async (req, res) => {
 
       res.status(201).json({ message: 'new user created' });
     }
+  } catch (error) {
+    res.status(500).json({ error: { message: error.message, fields: [] } });
+  }
+  //send email verification to user
+  try {
+    const recipient = newUser.email;
+    const subject = 'Verify your email address';
+    const text = `
+      Hi ${newUser.name}. Thank you for joining Swimhub. 
+      Please verify your email address by clicking the 
+      following link: http://localhost:5000/api/user/verify/${newUser.id}/${tokenData.token}. 
+      If this wasn't you, you can safely delete this email.
+    `;
+    const html = `
+      Hi ${newUser.name}. <br/><br/>Thank you for joining Swimhub. 
+      Please verify your email address by clicking the 
+      following link: <br/><br/><a href="http://localhost:5000/api/user/verify/${newUser.id}/${tokenData.token}">VERIFY</a>. 
+      <br/><br/>If this wasn't you, you can safely delete this email.
+    `;
+
+    await sendEmail(recipient, subject, text, html);
   } catch (error) {
     res.status(500).json({ error: { message: error.message, fields: [] } });
   }

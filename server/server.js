@@ -3,8 +3,9 @@ import express from 'express';
 import cors from 'cors';
 import 'dotenv/config';
 import { router as userRoutes } from './routes/userRoutes.js';
-import session from './middleware/session.js';
+import session from './services/session.js';
 import { redisClient } from './lib/redis/redisClient.js';
+import { sendEmail } from './services/email.js';
 
 //initialise express app
 const app = express();
