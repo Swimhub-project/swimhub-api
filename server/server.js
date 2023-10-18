@@ -5,7 +5,7 @@ import 'dotenv/config';
 import { router as userRoutes } from './routes/userRoutes.js';
 import session from './services/session.js';
 import { redisClient } from './lib/redis/redisClient.js';
-import { sendEmail } from './services/email.js';
+import { rateLimiter } from './middleware/rateLimiter.js';
 
 //initialise express app
 const app = express();
@@ -17,9 +17,10 @@ const port = process.env.PORT || 5000;
 app.use(express.json());
 app.use(cors());
 app.use(session);
+app.use(rateLimiter);
 
 //routes
-app.use('/api/user', userRoutes);
+app.use('/user', userRoutes);
 
 //start server
 app.listen(port, async () => {

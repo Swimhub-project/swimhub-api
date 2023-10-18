@@ -27,3 +27,5 @@ router.use(authenticate);
 router.get('/profile', (req, res) => {
   res.json(req.session);
 });
+
+//TODO add endpoint for re-sending email verification
