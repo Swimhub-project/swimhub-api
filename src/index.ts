@@ -8,7 +8,7 @@ import { redisClient } from './lib/redis/redisClient';
 import { rateLimiter } from './middleware/rateLimiter';
 
 //initialise express app
-const app = express();
+export const app = express();
 
 //port and database variables - imported from .env file
 const port = process.env.PORT || 5000;
