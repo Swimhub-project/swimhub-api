@@ -2,7 +2,7 @@
   "scripts": {
     "dev": "nodemon - exec 'ts-node' --esm api/index.ts",
     "build": "npx tsc --project ./",
-    "vercel-build": "echo hello"
+    "vercel-build": "npx prisma generate"
   },
   "dependencies": {
     "@prisma/client": "^5.4.1",
