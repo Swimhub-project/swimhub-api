@@ -1,5 +1,5 @@
 // const baseUrl = process.env.BASE_URL || 'http://localhost:5000';
-const baseUrl = 'https://swimhub-production.up.railway.app/';
+const baseUrl = 'https://swimhub-production.up.railway.app';
 
 export const verifyEmailText = (name: string, id: string, token: string) => {
   return `Hi ${name}. Thank you for joining Swimhub. 
