@@ -22,9 +22,8 @@ app.use(rateLimiter);
 //routes
 app.use('/user', userRoutes);
 
-async () => await redisClient.connect(); //opens connection to redis database
-
 //start server
 app.listen(port, async () => {
+  await redisClient.connect(); //opens connection to redis database
   console.log(`server running on port ${port}, ${redisClient.isOpen}`);
 });
