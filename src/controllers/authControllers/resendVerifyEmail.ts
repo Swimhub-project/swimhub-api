@@ -8,6 +8,7 @@ import {
   verifyEmailHtml,
 } from '../../utils/templates/verifyEmailTemplates';
 import { prismaClient } from '../../lib/prisma/prismaClient';
+import { ErrorReturn } from '../../types/return.type';
 
 const { isEmail, isEmpty, isStrongPassword, normalizeEmail, escape } =
   validator;
@@ -21,11 +22,13 @@ export const resendEmailVerification = async (req: Request, res: Response) => {
   if (!id) {
     missingParams.push('id');
   }
-
   if (missingParams.length > 0) {
-    res.status(400).json({
-      error: { message: 'missing body parameters', fields: missingParams },
-    });
+    const error: ErrorReturn = {
+      code: 400,
+      message: 'Missing body parameters',
+      params: missingParams,
+    };
+    res.status(400).json({ error });
     return;
   }
 
@@ -36,28 +39,39 @@ export const resendEmailVerification = async (req: Request, res: Response) => {
   }
 
   if (emptyFields.length > 0) {
-    res.status(400).json({
-      error: { message: 'Please fill in all fields', fields: emptyFields },
-    });
+    const error: ErrorReturn = {
+      code: 400,
+      message: 'Empty input fields',
+      params: emptyFields,
+    };
+    res.status(400).json({ error });
     return;
   }
 
   //search for user in database
   const user = await prismaClient.user.findUnique({ where: { id: id } });
   if (!user) {
-    res.status(404).json({
-      error: { message: 'user not found' },
-      fields: ['id'],
-    });
+    const error: ErrorReturn = {
+      code: 404,
+      message: 'User not found',
+      params: ['email'],
+    };
+    res.status(404).json({ error });
     return;
   }
 
   //check user status
   if (user.status != 'inactive') {
-    res.status(500).json({
-      error: { message: 'user already verified' },
-      fields: [],
-    });
+    //delete token from database
+    await prismaClient.authToken.delete({ where: { user_id: user.id } });
+    const error: ErrorReturn = {
+      code: 409,
+      message: 'User email already verified',
+      params: ['userId'],
+    };
+
+    res.status(409).json({ error });
+    return;
   }
 
   //create token and send email verification
@@ -68,9 +82,13 @@ export const resendEmailVerification = async (req: Request, res: Response) => {
     const text = verifyEmailText(user.name, user.id, token.token);
     const html = verifyEmailHtml(user.name, user.id, token.token);
     await sendEmail(recipient, subject, text, html);
-  } catch (error) {
-    res
-      .status(500)
-      .json({ error: { message: (error as Error).message, fields: [] } });
+    res.sendStatus(200);
+  } catch (err) {
+    const error: ErrorReturn = {
+      code: 500,
+      message: (err as Error).message,
+    };
+    res.status(500).json({ error });
+    return;
   }
 };

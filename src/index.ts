@@ -2,7 +2,9 @@
 import express from 'express';
 import cors from 'cors';
 import 'dotenv/config';
+import { router as authRoutes } from './routes/authRoutes';
 import { router as userRoutes } from './routes/userRoutes';
+import { router as sessionRoutes } from './routes/sessionRoutes';
 import session from './services/session';
 import { redisClient } from './lib/redis/redisClient';
 import { rateLimiter } from './middleware/rateLimiter';
@@ -20,7 +22,9 @@ app.use(session);
 app.use(rateLimiter);
 
 //routes
+app.use('/auth', authRoutes);
 app.use('/user', userRoutes);
+app.use('/session', sessionRoutes);
 
 //start server
 app.listen(port, async () => {

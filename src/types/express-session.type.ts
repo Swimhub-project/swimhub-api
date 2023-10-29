@@ -5,4 +5,5 @@ export interface ISession extends Session {
   clientId: string;
   role: UserRole;
   status: UserStatus;
+  email: string;
 }

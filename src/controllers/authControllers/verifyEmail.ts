@@ -3,6 +3,7 @@ import validator from 'validator';
 import { Request, Response } from 'express';
 import { prismaClient } from '../../lib/prisma/prismaClient';
 import { ISession } from '../../types/express-session.type';
+import { ErrorReturn } from '../../types/return.type';
 
 const { isEmail, isEmpty, isStrongPassword, normalizeEmail, escape } =
   validator;
@@ -13,35 +14,59 @@ export const verifyEmail = async (req: Request, res: Response) => {
   const userId = req.params.id;
   const token = req.params.token;
 
+  //check all params exist
+  const missingParams = [];
+  if (!userId) {
+    missingParams.push('userId');
+  }
+  if (!token) {
+    missingParams.push('token');
+  }
+  if (missingParams.length > 0) {
+    const error: ErrorReturn = {
+      code: 400,
+      message: 'Missing url parameters',
+      params: missingParams,
+    };
+    res.status(400).json(error);
+    return;
+  }
+
   //search for auth token in database
   const userToken = await prismaClient.authToken.findUnique({
     where: { user_id: userId },
   });
   if (!userToken) {
-    res.status(404).json({
-      error: { message: 'token not found' },
-      fields: ['token'],
-    });
+    const error: ErrorReturn = {
+      code: 404,
+      message: 'Token not found',
+      params: ['token'],
+    };
+    res.status(404).json(error);
     return;
   }
 
   //check expire date of token
   const today = new Date();
   if (userToken.expires_on < today) {
-    res.status(500).json({
-      error: { message: 'token has expired' },
-      fields: ['token'],
-    });
+    const error: ErrorReturn = {
+      code: 401,
+      message: 'Token has expired',
+      params: ['token'],
+    };
+    res.status(401).json(error);
     return;
   }
 
   //search for user in database
   const user = await prismaClient.user.findUnique({ where: { id: userId } });
   if (!user) {
-    res.status(404).json({
-      error: { message: 'user not found' },
-      fields: ['userId'],
-    });
+    const error: ErrorReturn = {
+      code: 404,
+      message: 'User not found',
+      params: ['userId'],
+    };
+    res.status(404).json(error);
     return;
   }
 
@@ -49,14 +74,16 @@ export const verifyEmail = async (req: Request, res: Response) => {
   if (user.status != 'inactive') {
     //delete token from database
     await prismaClient.authToken.delete({ where: { user_id: user.id } });
+    const error: ErrorReturn = {
+      code: 409,
+      message: 'User email already verified',
+      params: ['userId'],
+    };
 
-    res.status(500).json({
-      error: { message: 'user already verified' },
-      fields: [],
-    });
+    res.status(409).json(error);
     return;
   }
-
+  //TODO talk to Steph about what to do once user is verified
   //update user status and sign user in
   try {
     const updatedUser = await prismaClient.user.update({
@@ -70,8 +97,9 @@ export const verifyEmail = async (req: Request, res: Response) => {
     (req.session as ISession).role = user.role;
     (req.session as ISession).status = user.status;
     (req.session as ISession).clientId = 'abc123';
+    (req.session as ISession).email = user.email;
 
-    res.status(200).json({ message: 'verification successful' });
+    res.sendStatus(200);
     return;
   } catch (error) {
     res

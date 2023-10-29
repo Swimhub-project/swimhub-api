@@ -1,40 +1,23 @@
 //import packages
 import express from 'express';
-import { getSessions } from '../controllers/userControllers/getSessions';
-import { getUsers } from '../controllers/userControllers/getUsers';
-import { requestPasswordReset } from '../controllers/userControllers/passwordReset';
-import { signInUser } from '../controllers/userControllers/signin';
-import { signUpUser } from '../controllers/userControllers/signup';
-import { verifyEmail } from '../controllers/userControllers/verifyEmail';
 import { authenticate } from '../middleware/requireAuth';
+import { getUsers } from '../controllers/userControllers/getUsers';
+import { getUserById } from '../controllers/userControllers/getUser';
 
 //initialise express router
 export const router = express.Router();
 
-//sign in route
-router.post('/signin', signInUser);
+//get users route - Move to protected (admins only) in production
+router.get('/user', getUsers); //TODO fill out controller
 
-//sign up route
-router.post('/signup', signUpUser);
-
-//verify email route
-router.get('/verify/:id/:token', verifyEmail);
-
-//get users route - TESTING ONLY
-router.get('/users', getUsers);
-
-//get sessions route - TESTING ONLY
-router.get('/sessions', getSessions);
-
-router.post('/reset', requestPasswordReset);
+router.get('/user/:id', getUserById); //TODO fill out controller
 
 //all routes that come after this middleware are protected.
 //can only be access if the user is logged in.
 router.use(authenticate);
 
-//test profile route
-router.get('/profile', (req, res) => {
+//get user profile
+router.get('/user/:id/profile', (req, res) => {
+  //TODO fill out controller
   res.json(req.session);
 });
-
-//TODO add endpoint for re-sending email verification

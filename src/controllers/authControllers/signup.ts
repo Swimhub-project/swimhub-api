@@ -11,6 +11,8 @@ import {
   verifyEmailText,
   verifyEmailHtml,
 } from '../../utils/templates/verifyEmailTemplates';
+import { ErrorReturn } from '../../types/return.type';
+import { UserObjectStripped } from '../../types/user.type';
 
 const { isEmail, isEmpty, isStrongPassword, normalizeEmail, escape } =
   validator;
@@ -34,9 +36,12 @@ export const signUpUser = async (req: Request, res: Response) => {
     missingParams.push('repeat password');
   }
   if (missingParams.length > 0) {
-    res.status(400).json({
-      error: { message: 'missing body parameters', fields: missingParams },
-    });
+    const error: ErrorReturn = {
+      code: 400,
+      message: 'Missing body parameters',
+      params: missingParams,
+    };
+    res.status(400).json(error);
     return;
   }
 
@@ -55,38 +60,45 @@ export const signUpUser = async (req: Request, res: Response) => {
     emptyFields.push('repeat password');
   }
   if (emptyFields.length > 0) {
-    res.status(400).json({
-      error: { message: 'Please fill in all fields', fields: emptyFields },
-    });
+    const error: ErrorReturn = {
+      code: 400,
+      message: 'Empty input fields',
+      params: emptyFields,
+    };
+    res.status(400).json(error);
     return;
   }
 
   //check email
   if (!isEmail(email)) {
-    res.status(400).json({
-      error: { message: 'Please enter a valid email' },
-      fields: ['email'],
-    });
+    const error: ErrorReturn = {
+      code: 400,
+      message: 'Invalid email',
+      params: ['email'],
+    };
+    res.status(400).json(error);
     return;
   }
 
   //check password strength
   if (!isStrongPassword(password)) {
-    res.status(400).json({
-      error: {
-        message: 'Password is not strong enough',
-        fields: ['password'],
-      },
-    });
+    const error: ErrorReturn = {
+      code: 400,
+      message: 'Password not strong enough',
+      params: ['password'],
+    };
+    res.status(400).json(error);
     return;
   }
 
   //check passwords match
   if (password != repeatPassword) {
-    res.status(400).json({
-      error: { message: 'Passwords do not match' },
-      fields: ['password, repeat password'],
-    });
+    const error: ErrorReturn = {
+      code: 400,
+      message: 'Passwords do not match',
+      params: ['password', 'repeatPassword'],
+    };
+    res.status(400).json(error);
     return;
   }
 
@@ -100,9 +112,12 @@ export const signUpUser = async (req: Request, res: Response) => {
   //check email doesn't already exist in database
   const user = await prismaClient.user.findUnique({ where: { email: email } });
   if (user) {
-    res
-      .status(400)
-      .json({ error: { message: 'Email already exists', fields: ['email'] } });
+    const error: ErrorReturn = {
+      code: 409,
+      message: 'User with that email already exists',
+      params: ['email'],
+    };
+    res.status(409).json(error);
     return;
   }
 
@@ -133,19 +148,32 @@ export const signUpUser = async (req: Request, res: Response) => {
         const text = verifyEmailText(newUser.name, newUser.id, tokenData.token);
         const html = verifyEmailHtml(newUser.name, newUser.id, tokenData.token);
         await sendEmail(recipient, subject, text, html);
-      } catch (error) {
-        res
-          .status(500)
-          .json({ error: { message: (error as Error).message, fields: [] } });
+      } catch (err) {
+        const error: ErrorReturn = {
+          code: 500,
+          message: (err as Error).message,
+        };
+        res.status(500).json(error);
       }
     }
-    res.status(201).json({ message: 'new user created' });
+    const user: UserObjectStripped = {
+      id: newUser.id,
+      name: newUser.name,
+      email: newUser.email,
+      role: newUser.role,
+      status: newUser.status,
+      is_teacher: newUser.is_teacher,
+      bio: newUser.bio,
+      is_bio_public: newUser.is_bio_public,
+    };
+    res.status(201).json(user);
     return;
-    //TODO return created user object
-  } catch (error) {
-    res
-      .status(500)
-      .json({ error: { message: (error as Error).message, fields: [] } });
+  } catch (err) {
+    const error: ErrorReturn = {
+      code: 500,
+      message: (err as Error).message,
+    };
+    res.status(500).json(error);
     return;
   }
 };
