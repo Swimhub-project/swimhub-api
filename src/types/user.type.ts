@@ -33,3 +33,13 @@ export type UserObjectStripped = {
   bio: string;
   is_bio_public: boolean;
 };
+
+export type UserSearchData = {
+  name?: { contains: string };
+  user_name?: { contains: string };
+  email?: { contains: string };
+  role?: UserRole;
+  status?: UserStatus;
+  is_teacher?: boolean;
+  is_bio_public?: boolean;
+};

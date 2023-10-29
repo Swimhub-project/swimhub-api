@@ -8,9 +8,9 @@ import { getUserById } from '../controllers/userControllers/getUser';
 export const router = express.Router();
 
 //get users route - Move to protected (admins only) in production
-router.get('/user', getUsers); //TODO fill out controller
+router.get('/', getUsers);
 
-router.get('/user/:id', getUserById); //TODO fill out controller
+router.get('/:id', getUserById); //TODO fill out controller
 
 //all routes that come after this middleware are protected.
 //can only be access if the user is logged in.
