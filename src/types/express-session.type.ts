@@ -7,3 +7,10 @@ export interface ISession extends Session {
   status: UserStatus;
   email: string;
 }
+
+export type SessionSearchData = {
+  role?: UserRole;
+  status?: UserStatus;
+  clientId?: string;
+  email?: { contains: string; mode?: any };
+};

@@ -9,7 +9,7 @@ import {
 } from '../../utils/functions/validateInputs';
 import { prismaClient } from '../../lib/prisma/prismaClient';
 import { UserSearchData } from '../../types/user.type';
-import { UserRole, UserStatus } from '@prisma/client';
+import { Prisma, UserRole, UserStatus } from '@prisma/client';
 
 const { escape, isEmpty, isEmail, normalizeEmail } = validator;
 
@@ -19,18 +19,24 @@ export const getUsers = async (req: Request, res: Response) => {
 
   const searchData: UserSearchData = {};
 
-  //validate and sanitise url params. If param passes all tests it goes into the searchData object
+  /*
+    validate and sanitise search params. 
+    If param passes all tests it goes into the searchData object
+  */
   if (name) {
     name = escape(name as string).trim();
     if (!isEmpty(name, { ignore_whitespace: true })) {
-      searchData.name = { contains: name };
+      searchData.name = { contains: name, mode: Prisma.QueryMode.insensitive };
     }
   }
 
   if (username) {
     username = escape(name as string).trim();
     if (!isEmpty(username, { ignore_whitespace: true })) {
-      searchData.user_name = { contains: username };
+      searchData.user_name = {
+        contains: username,
+        mode: Prisma.QueryMode.insensitive,
+      };
     }
   }
 
@@ -47,7 +53,10 @@ export const getUsers = async (req: Request, res: Response) => {
       email = email = escape(email as string).trim();
       email = normalizeEmail(email, { gmail_remove_dots: false }) as string;
       if (!isEmpty(email, { ignore_whitespace: true })) {
-        searchData.email = { contains: email };
+        searchData.email = {
+          contains: email,
+          mode: Prisma.QueryMode.insensitive,
+        };
       }
     }
   }
@@ -163,7 +172,7 @@ export const getUsers = async (req: Request, res: Response) => {
     //fetch users if count is higher than 0
     if (userCount == 0) {
       const error: ErrorReturn = {
-        code: 500,
+        code: 404,
         message: 'No matching users found.',
       };
       res.status(404).json(error);
@@ -184,7 +193,7 @@ export const getUsers = async (req: Request, res: Response) => {
 
         const result = {
           currentPage: pageNum,
-          totalPages: userCount % limitNum,
+          totalPages: Math.ceil(userCount / limitNum),
           numberOfResults: users.length,
           totalNumberOfResults: userCount,
           users: userData,

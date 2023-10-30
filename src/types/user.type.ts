@@ -1,4 +1,4 @@
-import { UserRole, UserStatus } from '@prisma/client';
+import { Prisma, UserRole, UserStatus } from '@prisma/client';
 
 export type ModeratorNote = {
   id: string;
@@ -35,9 +35,9 @@ export type UserObjectStripped = {
 };
 
 export type UserSearchData = {
-  name?: { contains: string };
-  user_name?: { contains: string };
-  email?: { contains: string };
+  name?: { contains: string; mode?: any };
+  user_name?: { contains: string; mode?: any };
+  email?: { contains: string; mode?: any };
   role?: UserRole;
   status?: UserStatus;
   is_teacher?: boolean;
