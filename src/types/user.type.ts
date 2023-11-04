@@ -1,4 +1,4 @@
-import { Prisma, UserRole, UserStatus } from '@prisma/client';
+import { UserRole, UserStatus } from '@prisma/client';
 
 export type ModeratorNote = {
   id: string;
