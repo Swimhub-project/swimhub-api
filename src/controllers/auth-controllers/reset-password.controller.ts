@@ -11,7 +11,7 @@
 //import packages
 import { Request, Response } from 'express';
 import validator from 'validator';
-import { ErrorReturn } from '../../types/error-return.type';
+import { ErrorReturn } from '../../types/error-return';
 import { prismaClient } from '../../lib/prisma/client.prisma';
 import { sendEmail } from '../../services/email.service';
 import { createToken } from '../../utils/functions/create-token.function';

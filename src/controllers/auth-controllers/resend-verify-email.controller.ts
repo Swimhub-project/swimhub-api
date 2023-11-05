@@ -15,7 +15,7 @@ import {
   verifyEmailHtml,
 } from '../../utils/templates/verify-email.template';
 import { prismaClient } from '../../lib/prisma/client.prisma';
-import { ErrorReturn } from '../../types/error-return.type';
+import { ErrorReturn } from '../../types/error-return';
 
 const { isEmpty } = validator;
 

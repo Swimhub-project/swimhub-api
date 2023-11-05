@@ -16,8 +16,8 @@ import {
   verifyEmailText,
   verifyEmailHtml,
 } from '../../utils/templates/verify-email.template';
-import { ErrorReturn } from '../../types/error-return.type';
-import { UserObjectStripped } from '../../types/user.type';
+import { ErrorReturn } from '../../types/error-return';
+import { UserObjectStripped } from '../../types/user';
 
 const { isEmail, isEmpty, isStrongPassword, normalizeEmail, escape } =
   validator;

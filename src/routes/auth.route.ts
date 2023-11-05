@@ -6,12 +6,12 @@
 
 //import packages
 import express from 'express';
+import { resendEmailVerification } from '../controllers/auth-controllers/resend-verify-email.controller';
 import { requestPasswordReset } from '../controllers/auth-controllers/reset-password.controller';
 import { signInUser } from '../controllers/auth-controllers/signin.controller';
 import { signUpUser } from '../controllers/auth-controllers/signup.controller';
 import { verifyEmail } from '../controllers/auth-controllers/verify-email.controller';
 import { authenticate } from '../middleware/require-auth.middleware';
-import { resendEmailVerification } from '../controllers/auth-controllers/resend-verify-email.controller';
 
 //initialise express router
 export const router = express.Router();

@@ -7,7 +7,7 @@
 */
 
 //import packages
-import { activeEnvironment } from '../../index';
+import { activeEnvironment } from '../../server';
 
 /*
 sets base url for emails. In development it runs on 

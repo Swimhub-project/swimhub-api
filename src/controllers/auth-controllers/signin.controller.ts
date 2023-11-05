@@ -9,9 +9,9 @@ import validator from 'validator';
 import bcrypt from 'bcrypt';
 import { Request, Response } from 'express';
 import { prismaClient } from '../../lib/prisma/client.prisma';
-import { ISession } from '../../types/express-session.type';
-import { ErrorReturn } from '../../types/error-return.type';
-import { UserObjectStripped } from '../../types/user.type';
+import { ISession } from '../../types/express-session';
+import { ErrorReturn } from '../../types/error-return';
+import { UserObjectStripped } from '../../types/user';
 
 const { isEmail, isEmpty, isStrongPassword, normalizeEmail, escape } =
   validator;

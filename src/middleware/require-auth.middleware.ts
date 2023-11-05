@@ -7,7 +7,7 @@
 
 //import packages
 import { NextFunction, Request, Response } from 'express';
-import { ISession } from '../types/express-session.type';
+import { ISession } from '../types/express-session';
 
 interface ResError extends Error {
   statusCode?: number;

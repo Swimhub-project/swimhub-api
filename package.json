@@ -1,14 +1,15 @@
 {
   "scripts": {
-    "dev": "nodemon - exec 'ts-node' --esm api/index.ts",
+    "test": "jest",
+    "dev": "nodemon - exec 'ts-node' --esm api/server.ts",
     "build": "npx tsc --project ./",
-    "vercel-build": "echo hello",
     "postinstall": "prisma generate",
-    "start": "node dist/index.js"
+    "start": "node dist/server.js"
   },
   "dependencies": {
     "@prisma/client": "^5.4.1",
     "@sendgrid/mail": "^7.7.0",
+    "babel-jest": "^29.7.0",
     "bcrypt": "^5.1.1",
     "body-parser": "^1.20.2",
     "connect-redis": "^7.1.0",
@@ -18,18 +19,24 @@
     "prisma": "^5.3.1",
     "redis": "^4.6.10",
     "sendgrid": "^5.2.3",
+    "ts-jest": "^29.1.1",
     "validator": "^13.11.0",
     "winston": "^3.10.0"
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.23.2",
     "@types/bcrypt": "^5.0.1",
     "@types/cors": "^2.8.15",
     "@types/express": "^4.17.20",
     "@types/express-session": "^1.17.9",
+    "@types/jest": "^29.5.7",
     "@types/node": "^20.8.9",
+    "@types/supertest": "^2.0.15",
     "@types/validator": "^13.11.5",
     "dotenv": "^16.3.1",
+    "jest": "^29.7.0",
     "nodemon": "^3.0.1",
+    "supertest": "^6.3.3",
     "ts-node": "^10.9.1",
     "typescript": "^5.2.2"
   },

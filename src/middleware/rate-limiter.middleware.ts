@@ -23,7 +23,8 @@ export const rateLimiter = async (
   if (ip) {
     //update total number of request attempts and check if the limit has been reached
     const response = await redisClient.multi().incr(ip).expire(ip, 60).exec();
-    if ((response[0] as number) > 10) {
+    if ((response[0] as number) > 100) {
+      //TODO change limit to 10 for production
       res.status(429).json({ error: { message: 'Too many requests' } });
       return;
     }

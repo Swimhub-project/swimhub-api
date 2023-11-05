@@ -7,7 +7,7 @@
 //import packages
 import { Request, Response } from 'express';
 import validator from 'validator';
-import { ErrorReturn } from '../../types/error-return.type';
+import { ErrorReturn } from '../../types/error-return';
 import {
   isBoolean,
   isNumber,
@@ -15,7 +15,7 @@ import {
   isUserStatus,
 } from '../../utils/functions/validate-input.function';
 import { prismaClient } from '../../lib/prisma/client.prisma';
-import { UserSearchData } from '../../types/user.type';
+import { UserSearchData } from '../../types/user';
 import { Prisma, UserRole, UserStatus } from '@prisma/client';
 
 const { escape, isEmpty, isEmail, normalizeEmail } = validator;

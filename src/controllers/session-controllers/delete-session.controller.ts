@@ -6,7 +6,7 @@
 
 //import packages
 import { Request, Response } from 'express';
-import { ErrorReturn } from '../../types/error-return.type';
+import { ErrorReturn } from '../../types/error-return';
 
 export const deleteSession = async (req: Request, res: Response) => {
   //grab session id from URL

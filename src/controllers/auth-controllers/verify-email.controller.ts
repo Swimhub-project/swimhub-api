@@ -9,8 +9,8 @@
 //import packages
 import { Request, Response } from 'express';
 import { prismaClient } from '../../lib/prisma/client.prisma';
-import { ISession } from '../../types/express-session.type';
-import { ErrorReturn } from '../../types/error-return.type';
+import { ISession } from '../../types/express-session';
+import { ErrorReturn } from '../../types/error-return';
 
 //verify email
 export const verifyEmail = async (req: Request, res: Response) => {
