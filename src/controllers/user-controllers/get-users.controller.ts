@@ -176,7 +176,7 @@ export const getUsers = async (req: Request, res: Response) => {
     }
   }
 
-  //try fetches users from database
+  //try fetching users from database
   try {
     //get number of users that match search params
     const userCount = await prismaClient.user.count({

@@ -2,7 +2,7 @@ import bcrypt from 'bcrypt';
 import { prismaClient } from './client.prisma';
 import { faker } from '@faker-js/faker';
 import { UserRole, UserStatus } from '@prisma/client';
-//run command "npx prisma db seed" to generate 100 random users
+//run command "npx prisma db user-seed" to generate 100 random users
 
 const pickRandomItem = (arr: string[]): string => {
   let randomIndex = Math.floor(Math.random() * arr.length);

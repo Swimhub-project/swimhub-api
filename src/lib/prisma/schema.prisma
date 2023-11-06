@@ -45,6 +45,9 @@ model User {
 model Entry {
   id                  String              @id @default(cuid())
   user_id             String
+  title               String
+  body                String
+  author              String
   type                EntryType
   user                User                @relation(fields: [user_id], references: [id])
   favorite_entries    FavouriteEntry[]
@@ -55,7 +58,7 @@ model Entry {
   status              ContentStatus
   teaching_points     String[]
   stroke              EntryStroke
-  stage               String[]
+  stage               EntryStage[]
 }
 
 model FavouriteEntry {
@@ -148,4 +151,17 @@ enum UserStatus {
   banned
   deleted
   locked
+}
+
+enum EntryStage {
+  stage_1
+  stage_2
+  stage_3
+  stage_4
+  stage_5
+  stage_6
+  stage_7
+  stage_7_plus
+  adult
+  preschool
 }

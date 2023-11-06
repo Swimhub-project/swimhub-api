@@ -38,3 +38,48 @@ export const isNumber = (input: string): boolean => {
     return false;
   } else return true;
 };
+
+//returns true if the input is a valid entry type, else returns false
+export const isEntryType = (input: string): boolean => {
+  if (input == 'tip' || input == 'exercise' || input == 'lesson_plan') {
+    return true;
+  } else return false;
+};
+
+//returns true if the input is a valid entry stroke, else returns false
+export const isEntryStroke = (input: string): boolean => {
+  if (
+    input == 'frontcrawl' ||
+    input == 'backcrawl' ||
+    input == 'breastoke' ||
+    input == 'butterfly' ||
+    input == 'general'
+  ) {
+    return true;
+  } else return false;
+};
+
+//returns true if the input is a valid content status, else returns false
+export const isContentStatus = (input: string): boolean => {
+  if (input == 'public' || input == 'private' || input == 'deleted') {
+    return true;
+  } else return false;
+};
+
+//returns true if the input is a valid entry stage, else return false
+export const isEntryStage = (input: string): boolean => {
+  if (
+    input == 'stage_1' ||
+    input == 'stage_2' ||
+    input == 'stage_3' ||
+    input == 'stage_4' ||
+    input == 'stage_5' ||
+    input == 'stage_6' ||
+    input == 'stage_7' ||
+    input == 'stage_7_plus' ||
+    input == 'adult' ||
+    input == 'preschool'
+  ) {
+    return true;
+  } else return false;
+};
