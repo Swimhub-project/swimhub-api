@@ -8,45 +8,92 @@
 
 //import packages
 import request from 'supertest';
+import { UserObjectAdmin } from '../../types/user';
 
-//test for successfully getting list of users
+//test for successfully getting list of users with no params
 describe('Users successfully fetched with no search params', () => {
   it('should return a 200 status code', async () => {
     const response = await request('http://localhost:5000').get('/user');
     expect(response.statusCode).toBe(200);
+    expect(response.body.users.length).toBeLessThanOrEqual(10);
   });
 });
 
-//test for successfully getting users with role "user"
-describe('Users successfully fetched with role param', () => {
-  it('should return a 200 status code', async () => {
-    const response = await request('http://localhost:5000').get(
-      '/user?role=user'
-    );
-    expect(response.statusCode).toBe(200);
-    expect(response.body.users[0]).toHaveProperty('role', 'user');
+//test for successfully getting users with different user roles
+const userRoleOptions = ['user', 'moderator', 'admin'];
+
+userRoleOptions.forEach((option) => {
+  describe(`Users successfully fetched with role param: ${option}`, () => {
+    it('should return a 200 status code', async () => {
+      const response = await request('http://localhost:5000').get(
+        `/user?role=${option}`
+      );
+      expect(response.statusCode).toBe(200);
+      expect(response.body.users.length).toBeLessThanOrEqual(10);
+      response.body.users.forEach((user: UserObjectAdmin) => {
+        expect(user).toHaveProperty('role', option);
+      });
+    });
   });
 });
 
-//test for successfully getting users with status "active"
-describe('Users successfully fetched with status param', () => {
-  it('should return a 200 status code', async () => {
-    const response = await request('http://localhost:5000').get(
-      '/user?status=active'
-    );
-    expect(response.statusCode).toBe(200);
-    expect(response.body.users[0]).toHaveProperty('status', 'active');
+//test for successfully getting users with different user statuses
+const userStatusOptions = [
+  'active',
+  'inactive',
+  'muted',
+  'banned',
+  'deleted',
+  'locked',
+];
+
+userStatusOptions.forEach((option) => {
+  describe(`Users successfully fetched with status param: ${option}`, () => {
+    it('should return a 200 status code', async () => {
+      const response = await request('http://localhost:5000').get(
+        `/user?status=${option}`
+      );
+      expect(response.statusCode).toBe(200);
+      expect(response.body.users.length).toBeLessThanOrEqual(10);
+      response.body.users.forEach((user: UserObjectAdmin) => {
+        expect(user).toHaveProperty('status', option);
+      });
+    });
   });
 });
 
-//test for successfully getting users with "true" is_teacher property
-describe('Users successfully fetched with teacher param', () => {
-  it('should return a 200 status code', async () => {
-    const response = await request('http://localhost:5000').get(
-      '/user?teacher=true'
-    );
-    expect(response.statusCode).toBe(200);
-    expect(response.body.users[0]).toHaveProperty('status', 'active');
+const booleanOptions = ['true', 'false'];
+//test for successfully getting users with different is_teacher properties
+
+booleanOptions.forEach((option) => {
+  describe(`Users successfully fetched with ${option} teacher param`, () => {
+    it('should return a 200 status code', async () => {
+      const response = await request('http://localhost:5000').get(
+        `/user?teacher=${option}`
+      );
+      expect(response.statusCode).toBe(200);
+      expect(response.body.users.length).toBeLessThanOrEqual(10);
+      response.body.users.forEach((user: UserObjectAdmin) => {
+        expect(user).toHaveProperty('is_teacher', Boolean(option));
+      });
+    });
+  });
+});
+
+//test for successfully getting users with different is_bio_public properties
+
+booleanOptions.forEach((option) => {
+  describe(`Users successfully fetched with ${option} biopublic param`, () => {
+    it('should return a 200 status code', async () => {
+      const response = await request('http://localhost:5000').get(
+        `/user?biopublic=${option}`
+      );
+      expect(response.statusCode).toBe(200);
+      expect(response.body.users.length).toBeLessThanOrEqual(10);
+      response.body.users.forEach((user: UserObjectAdmin) => {
+        expect(user).toHaveProperty('is_bio_public', Boolean(option));
+      });
+    });
   });
 });
 
