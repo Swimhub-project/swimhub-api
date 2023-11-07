@@ -29,7 +29,7 @@ const { isEmpty, escape } = validator;
 
 export const getEntries = async (req: Request, res: Response) => {
   //get search params from url
-  let { text, type, stroke, stage, status, page, limit } = req.query;
+  let { author, text, type, stroke, stage, status, page, limit } = req.query;
 
   //object used to store sanitised search params
   const searchData: EntrySearchData = {};
@@ -38,15 +38,22 @@ export const getEntries = async (req: Request, res: Response) => {
     validate and sanitise search params. 
     If param passes all tests it goes into the searchData object
   */
+
+  if (author) {
+    author = escape(author as string).trim();
+    if (!isEmpty(author, { ignore_whitespace: true })) {
+      searchData.author = {
+        contains: author,
+        mode: Prisma.QueryMode.insensitive,
+      };
+    }
+  }
+
   if (text) {
     text = escape(text as string).trim();
     if (!isEmpty(text, { ignore_whitespace: true })) {
       searchData.title = { contains: text, mode: Prisma.QueryMode.insensitive };
       searchData.body = { contains: text, mode: Prisma.QueryMode.insensitive };
-      searchData.author = {
-        contains: text,
-        mode: Prisma.QueryMode.insensitive,
-      };
       //TODO figure out searching for teaching points from text
     }
   }
@@ -159,7 +166,7 @@ export const getEntries = async (req: Request, res: Response) => {
   try {
     //get number of entries that match search params
     const entryCount = await prismaClient.entry.count({
-      where: { stage: { hasEvery: ['stage_1'] } },
+      where: searchData,
     });
 
     //fetch users if count is higher than 0
