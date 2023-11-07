@@ -25,8 +25,13 @@ export type EntrySearchData = {
   author?: { contains: string; mode?: any };
   type?: EntryType;
   stroke?: EntryStroke;
-  stage?: { hasEvery: EntryStage[] };
+  stage?: { has: EntryStage };
   status?: ContentStatus;
   page?: number;
   limit?: limit;
+  OR?: [
+    { title: { contains: string } },
+    { body: { contains: string } },
+    { teaching_points: { has: string } }
+  ];
 };

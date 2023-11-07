@@ -32,7 +32,7 @@ const generateRandomEntry = async (user: UserObjectAdmin) => {
     user_id: user.id,
     title: faker.word.words(5),
     body: faker.lorem.paragraph(),
-    author: user.user_name || 'random_user',
+    author: user.user_name || 'anomalous_user',
     created_on: faker.date.past(),
     updated_on: faker.date.recent(),
     type: pickRandomItem(typeOptions),

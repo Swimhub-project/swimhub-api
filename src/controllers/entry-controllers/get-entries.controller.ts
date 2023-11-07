@@ -49,12 +49,15 @@ export const getEntries = async (req: Request, res: Response) => {
     }
   }
 
+  //text can be found in either the title, body or teaching_points fields
   if (text) {
     text = escape(text as string).trim();
     if (!isEmpty(text, { ignore_whitespace: true })) {
-      searchData.title = { contains: text, mode: Prisma.QueryMode.insensitive };
-      searchData.body = { contains: text, mode: Prisma.QueryMode.insensitive };
-      //TODO figure out searching for teaching points from text
+      searchData.OR = [
+        { title: { contains: text } },
+        { body: { contains: text } },
+        { teaching_points: { has: text } },
+      ];
     }
   }
 
@@ -104,7 +107,7 @@ export const getEntries = async (req: Request, res: Response) => {
     } else {
       stage = escape(stage as string).trim();
       if (!isEmpty(stage, { ignore_whitespace: true })) {
-        searchData.stage = { hasEvery: [stage as EntryStage] };
+        searchData.stage = { has: stage as EntryStage };
       }
     }
   }
