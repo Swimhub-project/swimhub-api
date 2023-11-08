@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker';
-import { pickRandomItem } from '../../utils/functions/random-item.function';
-import { prismaClient } from './client.prisma';
-import { UserObjectAdmin } from '../../types/user';
+import { pickRandomItem } from '../../../utils/functions/random-item.function';
+import { prismaClient } from '../client.prisma';
+import { UserObjectAdmin } from '../../../types/user';
 //run command "npx prisma db seed" to generate 100 random entries
 
 const generateRandomEntry = async (user: UserObjectAdmin) => {

@@ -24,6 +24,7 @@ import {
 } from '../../utils/functions/validate-input.function';
 import { ErrorReturn } from '../../types/error-return';
 import { prismaClient } from '../../lib/prisma/client.prisma';
+import { createLog } from '../../services/logger.service';
 
 const { isEmpty, escape } = validator;
 
@@ -179,6 +180,7 @@ export const getEntries = async (req: Request, res: Response) => {
         message: 'No matching entries found.',
       };
       res.status(404).json(error);
+      await createLog('info', req, res, error);
       return;
     } else {
       try {
@@ -196,6 +198,8 @@ export const getEntries = async (req: Request, res: Response) => {
           entries: entries,
         };
         res.status(200).json(result);
+        await createLog('info', req, res);
+        return;
       } catch (err) {
         const error: ErrorReturn = {
           code: 500,

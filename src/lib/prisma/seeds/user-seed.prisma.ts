@@ -1,8 +1,8 @@
 import bcrypt from 'bcrypt';
-import { prismaClient } from './client.prisma';
+import { prismaClient } from '../client.prisma';
 import { faker } from '@faker-js/faker';
 import { UserRole, UserStatus } from '@prisma/client';
-import { pickRandomItem } from '../../utils/functions/random-item.function';
+import { pickRandomItem } from '../../../utils/functions/random-item.function';
 //run command "npx prisma db user-seed" to generate 100 random users
 
 const generateRandomUser = async () => {

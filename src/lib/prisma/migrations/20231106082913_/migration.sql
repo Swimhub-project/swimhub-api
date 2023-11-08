@@ -1,3 +1,0 @@
--- AlterTable
-ALTER TABLE "Entry" ALTER COLUMN "stage" SET NOT NULL,
-ALTER COLUMN "stage" SET DATA TYPE TEXT;
