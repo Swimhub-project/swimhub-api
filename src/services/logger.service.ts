@@ -6,7 +6,7 @@
 
 import { Log } from '../lib/mongoose/log-model.mongoose';
 import { ErrorReturn } from '../types/error-return';
-import { ILog, LogLevel, ReqMethod, ResCode } from '../types/log';
+import { LogData, LogLevel, ReqMethod, ResCode } from '../types/log';
 import { Request, Response } from 'express';
 
 export const createLog = async (
@@ -23,20 +23,21 @@ export const createLog = async (
     logMessage = `ERROR: ${error?.message}`;
   }
 
-  const data: ILog = {
+  const data: LogData = {
     level: level,
     message: logMessage,
     timestamp: new Date(),
-    reqBody: req.body,
-    metadata: {
+    responseCode: res.statusCode as ResCode,
+    request: {
+      body: req.body,
+      headers: req.headers,
       url: req.originalUrl,
       method: req.method as ReqMethod,
-      responseCode: res.statusCode as ResCode,
       ip: req.socket.remoteAddress,
     },
   };
   const log = await Log.create(data);
 
-  //TODO if log is error or fatal, email admins
+  //TODO if log is critical, email admins
   return log;
 };

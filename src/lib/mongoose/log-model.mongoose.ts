@@ -1,8 +1,8 @@
 import mongoose, { model } from 'mongoose';
-import { IMetadata, ILog } from '../../types/log';
+import { LogRequestData, LogData } from '../../types/log';
 const { Schema } = mongoose;
 
-const metadataSchema = new Schema<IMetadata>(
+const logRequestDataSchema = new Schema<LogRequestData>(
   {
     url: { type: String, required: true },
     method: {
@@ -10,18 +10,19 @@ const metadataSchema = new Schema<IMetadata>(
       enum: ['GET', 'POST', 'PATCH', 'DELETE'],
       required: true,
     },
-    responseCode: { type: Number, required: true },
     ip: { type: String, required: true },
+    body: { type: Object },
+    headers: { type: Object },
   },
   { _id: false }
 );
 
-const logSchema = new Schema<ILog>(
+const logSchema = new Schema<LogData>(
   {
     level: {
       type: String,
       required: true,
-      enum: ['info', 'warn', 'error', 'fatal'],
+      enum: ['info', 'warn', 'error', 'critical'],
     },
     message: {
       type: String,
@@ -31,8 +32,12 @@ const logSchema = new Schema<ILog>(
       type: Date,
       required: true,
     },
-    metadata: {
-      type: metadataSchema,
+    responseCode: {
+      type: Number,
+      required: true,
+    },
+    request: {
+      type: logRequestDataSchema,
       required: true,
     },
   },

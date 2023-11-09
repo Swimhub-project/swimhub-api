@@ -12,6 +12,7 @@ import { prismaClient } from '../../lib/prisma/client.prisma';
 import { ISession } from '../../types/express-session';
 import { ErrorReturn } from '../../types/error-return';
 import { UserObjectStripped } from '../../types/user';
+import { createLog } from '../../services/logger.service';
 
 const { isEmail, isEmpty, isStrongPassword, normalizeEmail, escape } =
   validator;
@@ -35,6 +36,7 @@ export const signInUser = async (req: Request, res: Response) => {
       params: missingParams,
     };
     res.status(400).json(error);
+    await createLog('error', req, res, error);
     return;
   }
 
@@ -53,6 +55,7 @@ export const signInUser = async (req: Request, res: Response) => {
       params: emptyFields,
     };
     res.status(400).json(error);
+    await createLog('error', req, res, error);
     return;
   }
 
@@ -64,6 +67,7 @@ export const signInUser = async (req: Request, res: Response) => {
       params: ['email'],
     };
     res.status(400).json(error);
+    await createLog('error', req, res, error);
     return;
   }
 
@@ -75,6 +79,7 @@ export const signInUser = async (req: Request, res: Response) => {
       params: ['password'],
     };
     res.status(400).json(error);
+    await createLog('error', req, res, error);
     return;
   }
 
@@ -94,6 +99,7 @@ export const signInUser = async (req: Request, res: Response) => {
       params: ['email'],
     };
     res.status(404).json(error);
+    await createLog('error', req, res, error);
     return;
   }
 
@@ -106,6 +112,7 @@ export const signInUser = async (req: Request, res: Response) => {
       params: ['password'],
     };
     res.status(400).json(error);
+    await createLog('error', req, res, error);
     return;
   }
 
@@ -129,6 +136,7 @@ export const signInUser = async (req: Request, res: Response) => {
     };
 
     res.status(200).json(user);
+    await createLog('info', req, res);
     return;
   } catch (err) {
     const error: ErrorReturn = {
@@ -136,6 +144,7 @@ export const signInUser = async (req: Request, res: Response) => {
       message: (err as Error).message,
     };
     res.status(500).json(error);
+    await createLog('critical', req, res, error);
     return;
   }
 };

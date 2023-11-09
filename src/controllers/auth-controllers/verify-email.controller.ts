@@ -11,6 +11,7 @@ import { Request, Response } from 'express';
 import { prismaClient } from '../../lib/prisma/client.prisma';
 import { ISession } from '../../types/express-session';
 import { ErrorReturn } from '../../types/error-return';
+import { createLog } from '../../services/logger.service';
 
 //verify email
 export const verifyEmail = async (req: Request, res: Response) => {
@@ -33,6 +34,7 @@ export const verifyEmail = async (req: Request, res: Response) => {
       params: missingParams,
     };
     res.status(400).json(error);
+    await createLog('error', req, res, error);
     return;
   }
 
@@ -47,6 +49,7 @@ export const verifyEmail = async (req: Request, res: Response) => {
       params: ['token'],
     };
     res.status(404).json(error);
+    await createLog('error', req, res, error);
     return;
   }
 
@@ -59,6 +62,7 @@ export const verifyEmail = async (req: Request, res: Response) => {
       params: ['token'],
     };
     res.status(401).json(error);
+    await createLog('error', req, res, error);
     return;
   }
 
@@ -71,6 +75,7 @@ export const verifyEmail = async (req: Request, res: Response) => {
       params: ['userId'],
     };
     res.status(404).json(error);
+    await createLog('error', req, res, error);
     return;
   }
 
@@ -85,6 +90,7 @@ export const verifyEmail = async (req: Request, res: Response) => {
     };
 
     res.status(409).json(error);
+    await createLog('error', req, res, error);
     return;
   }
   //TODO talk to Steph about what to do once user is verified
@@ -104,11 +110,13 @@ export const verifyEmail = async (req: Request, res: Response) => {
     (req.session as ISession).email = user.email;
 
     res.sendStatus(200);
+    await createLog('info', req, res);
     return;
   } catch (error) {
     res
       .status(500)
       .json({ error: { message: (error as Error).message, fields: [] } });
+    // await createLog('critical', req, res, error);
     return;
   }
 };

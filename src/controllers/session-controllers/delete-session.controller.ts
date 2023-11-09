@@ -7,6 +7,7 @@
 //import packages
 import { Request, Response } from 'express';
 import { ErrorReturn } from '../../types/error-return';
+import { createLog } from '../../services/logger.service';
 
 export const deleteSession = async (req: Request, res: Response) => {
   //grab session id from URL
@@ -24,6 +25,7 @@ export const deleteSession = async (req: Request, res: Response) => {
       params: missingParams,
     };
     res.status(400).json(error);
+    await createLog('error', req, res, error);
     return;
   }
 
@@ -34,11 +36,13 @@ export const deleteSession = async (req: Request, res: Response) => {
       message: 'Session store not found.',
     };
     res.status(404).json(error);
+    await createLog('error', req, res, error);
     return;
   }
 
   //deletes the selected session
   req.sessionStore.destroy(sessionId, (err) => {
     res.sendStatus(200);
+    createLog('info', req, res);
   });
 };

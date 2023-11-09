@@ -12,6 +12,8 @@
 //import packages
 import { NextFunction, Request, Response } from 'express';
 import { redisClient } from '../lib/redis/client.redis';
+import { createLog } from '../services/logger.service';
+import { ErrorReturn } from '../types/error-return';
 
 export const rateLimiter = async (
   req: Request,
@@ -25,7 +27,12 @@ export const rateLimiter = async (
     const response = await redisClient.multi().incr(ip).expire(ip, 60).exec();
     if ((response[0] as number) > 100) {
       //TODO change limit to 10 for production
-      res.status(429).json({ error: { message: 'Too many requests' } });
+      const error: ErrorReturn = {
+        code: 429,
+        message: 'Too many requests',
+      };
+      res.status(429).json(error);
+      await createLog('error', req, res, error);
       return;
     }
   } else throw new Error('ip address not found');

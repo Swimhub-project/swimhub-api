@@ -15,6 +15,7 @@ import { ErrorReturn } from '../../types/error-return';
 import { prismaClient } from '../../lib/prisma/client.prisma';
 import { sendEmail } from '../../services/email.service';
 import { createToken } from '../../utils/functions/create-token.function';
+import { createLog } from '../../services/logger.service';
 
 const { isEmail, isEmpty, escape, normalizeEmail } = validator;
 
@@ -34,6 +35,7 @@ export const requestPasswordReset = async (req: Request, res: Response) => {
       params: missingParams,
     };
     res.status(400).json(error);
+    await createLog('error', req, res, error);
     return;
   }
 
@@ -49,6 +51,7 @@ export const requestPasswordReset = async (req: Request, res: Response) => {
       params: emptyFields,
     };
     res.status(400).json(error);
+    await createLog('error', req, res, error);
     return;
   }
 
@@ -60,6 +63,7 @@ export const requestPasswordReset = async (req: Request, res: Response) => {
       params: ['email'],
     };
     res.status(400).json(error);
+    await createLog('error', req, res, error);
     return;
   }
 
@@ -76,6 +80,7 @@ export const requestPasswordReset = async (req: Request, res: Response) => {
       params: ['email'],
     };
     res.status(404).json(error);
+    await createLog('error', req, res, error);
     return;
   }
 
@@ -88,11 +93,13 @@ export const requestPasswordReset = async (req: Request, res: Response) => {
     const html = '';
     await sendEmail(recipient, subject, text, html);
     res.sendStatus(200);
+    await createLog('info', req, res);
   } catch (err) {
     const error: ErrorReturn = {
       code: 500,
       message: (err as Error).message,
     };
     res.status(500).json(error);
+    await createLog('critical', req, res, error);
   }
 };
