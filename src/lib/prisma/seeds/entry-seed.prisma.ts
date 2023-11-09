@@ -4,6 +4,8 @@ import { prismaClient } from '../client.prisma';
 import { UserObjectAdmin } from '../../../types/user';
 //run command "npx prisma db seed" to generate 100 random entries
 
+const genCount = 100;
+
 const generateRandomEntry = async (user: UserObjectAdmin) => {
   const statusOptions = ['public', 'private', 'deleted'];
   const strokeOptions = [
@@ -62,7 +64,7 @@ const generateEntries = async (count: number) => {
 };
 
 const main = async () => {
-  const randomEntries = await generateEntries(100);
+  const randomEntries = await generateEntries(genCount);
   await prismaClient.entry.createMany({
     data: randomEntries,
     skipDuplicates: true,

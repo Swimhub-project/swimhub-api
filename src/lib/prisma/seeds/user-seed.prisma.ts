@@ -5,6 +5,8 @@ import { UserRole, UserStatus } from '@prisma/client';
 import { pickRandomItem } from '../../../utils/functions/random-item.function';
 //run command "npx prisma db user-seed" to generate 100 random users
 
+const genCount = 100;
+
 const generateRandomUser = async () => {
   const roleOptions = ['user', 'moderator', 'admin'];
   const statusOptions = [
@@ -46,7 +48,7 @@ const generateUsers = async (count: number) => {
 };
 
 const main = async () => {
-  const randomUsers = await generateUsers(100);
+  const randomUsers = await generateUsers(genCount);
   await prismaClient.user.createMany({
     data: randomUsers,
     skipDuplicates: true,

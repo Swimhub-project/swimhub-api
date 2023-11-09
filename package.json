@@ -43,6 +43,6 @@
   },
   "prisma": {
     "schema": "src/lib/prisma/schema.prisma",
-    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} src/lib/prisma/seeds/entry-seed.prisma.ts"
+    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} src/lib/prisma/seeds/user-seed.prisma.ts"
   }
 }
