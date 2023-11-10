@@ -28,7 +28,7 @@ export const authenticate = async (
       code: 401,
       message: 'No valid session found',
     };
-    await createLog('error', req, res, error);
+    createLog('error', req, res, error);
     next(err);
   } else {
     next();

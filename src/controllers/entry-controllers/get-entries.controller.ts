@@ -70,7 +70,7 @@ export const getEntries = async (req: Request, res: Response) => {
         params: ['type'],
       };
       res.status(400).json(error);
-      await createLog('error', req, res, error);
+      createLog('error', req, res, error);
       return;
     } else {
       type = escape(type as string).trim();
@@ -88,7 +88,7 @@ export const getEntries = async (req: Request, res: Response) => {
         params: ['stroke'],
       };
       res.status(400).json(error);
-      await createLog('error', req, res, error);
+      createLog('error', req, res, error);
       return;
     } else {
       stroke = escape(stroke as string).trim();
@@ -106,7 +106,7 @@ export const getEntries = async (req: Request, res: Response) => {
         params: ['stage'],
       };
       res.status(400).json(error);
-      await createLog('error', req, res, error);
+      createLog('error', req, res, error);
       return;
     } else {
       stage = escape(stage as string).trim();
@@ -124,7 +124,7 @@ export const getEntries = async (req: Request, res: Response) => {
         params: ['status'],
       };
       res.status(400).json(error);
-      await createLog('error', req, res, error);
+      createLog('error', req, res, error);
       return;
     } else {
       status = escape(status as string).trim();
@@ -144,7 +144,7 @@ export const getEntries = async (req: Request, res: Response) => {
         params: ['page'],
       };
       res.status(400).json(error);
-      await createLog('error', req, res, error);
+      createLog('error', req, res, error);
       return;
     } else {
       pageNum = parseInt(escape(page as string).trim());
@@ -161,7 +161,7 @@ export const getEntries = async (req: Request, res: Response) => {
         params: ['limit'],
       };
       res.status(400).json(error);
-      await createLog('error', req, res, error);
+      createLog('error', req, res, error);
       return;
     } else {
       if (parseInt(escape(limit as string).trim()) > 10) {
@@ -186,7 +186,7 @@ export const getEntries = async (req: Request, res: Response) => {
         message: 'No matching entries found.',
       };
       res.status(404).json(error);
-      await createLog('error', req, res, error);
+      createLog('error', req, res, error);
       return;
     } else {
       try {
@@ -211,7 +211,7 @@ export const getEntries = async (req: Request, res: Response) => {
           message: (err as Error).message,
         };
         res.status(500).json(error);
-        await createLog('critical', req, res, error);
+        createLog('critical', req, res, error);
         return;
       }
     }
@@ -221,7 +221,7 @@ export const getEntries = async (req: Request, res: Response) => {
       message: (err as Error).message,
     };
     res.status(500).json(error);
-    await createLog('critical', req, res, error);
+    createLog('critical', req, res, error);
     return;
   }
 };

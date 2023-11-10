@@ -195,7 +195,7 @@ export const getLogs = async (req: Request, res: Response) => {
         params: ['limit'],
       };
       res.status(400).json(error);
-      await createLog('error', req, res, error);
+      createLog('error', req, res, error);
       return;
     } else {
       if (parseInt(escape(limit as string).trim()) > 10) {
@@ -219,7 +219,7 @@ export const getLogs = async (req: Request, res: Response) => {
       code: 500,
       message: (err as Error).message,
     };
-    await createLog('critical', req, res, error);
+    createLog('critical', req, res, error);
     return;
   }
 };

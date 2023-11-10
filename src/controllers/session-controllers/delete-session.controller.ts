@@ -25,7 +25,7 @@ export const deleteSession = async (req: Request, res: Response) => {
       params: missingParams,
     };
     res.status(400).json(error);
-    await createLog('error', req, res, error);
+    createLog('error', req, res, error);
     return;
   }
 
@@ -36,7 +36,7 @@ export const deleteSession = async (req: Request, res: Response) => {
       message: 'Session store not found.',
     };
     res.status(404).json(error);
-    await createLog('error', req, res, error);
+    createLog('error', req, res, error);
     return;
   }
 

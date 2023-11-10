@@ -17,7 +17,7 @@ export const getSessions = async (req: Request, res: Response) => {
       message: 'Session store not found.',
     };
     res.status(404).json(error);
-    await createLog('error', req, res, error);
+    createLog('error', req, res, error);
     return;
   }
   //get all active user sessions

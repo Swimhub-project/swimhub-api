@@ -32,7 +32,7 @@ export const rateLimiter = async (
         message: 'Too many requests',
       };
       res.status(429).json(error);
-      await createLog('error', req, res, error);
+      createLog('error', req, res, error);
       return;
     }
   } else throw new Error('ip address not found');

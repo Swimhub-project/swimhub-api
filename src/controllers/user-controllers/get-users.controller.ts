@@ -198,7 +198,7 @@ export const getUsers = async (req: Request, res: Response) => {
         message: 'No matching users found.',
       };
       res.status(404).json(error);
-      await createLog('error', req, res, error);
+      createLog('error', req, res, error);
       return;
     } else {
       try {
@@ -228,7 +228,7 @@ export const getUsers = async (req: Request, res: Response) => {
           message: (err as Error).message,
         };
         res.status(500).json(error);
-        await createLog('critical', req, res, error);
+        createLog('critical', req, res, error);
         return;
       }
     }
@@ -238,7 +238,7 @@ export const getUsers = async (req: Request, res: Response) => {
       message: (err as Error).message,
     };
     res.status(500).json(error);
-    await createLog('critical', req, res, error);
+    createLog('critical', req, res, error);
     return;
   }
 };
