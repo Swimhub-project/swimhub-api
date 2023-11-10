@@ -16,7 +16,7 @@ interface ResError extends Error {
 }
 
 //TODO add check for status and role - return 403 error if invalid
-export const authenticate = async (
+export const authenticate = (
   req: Request,
   res: Response,
   next: NextFunction
