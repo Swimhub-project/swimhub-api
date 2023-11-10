@@ -66,7 +66,7 @@ export const isContentStatus = (input: string): boolean => {
   } else return false;
 };
 
-//returns true if the input is a valid entry stage, else return false
+//returns true if the input is a valid entry stage, else returns false
 export const isEntryStage = (input: string): boolean => {
   if (
     input == 'stage_1' ||
@@ -79,6 +79,63 @@ export const isEntryStage = (input: string): boolean => {
     input == 'stage_7_plus' ||
     input == 'adult' ||
     input == 'preschool'
+  ) {
+    return true;
+  } else return false;
+};
+
+//returns true if the input is a valid log level, else returns false
+export const isLogLevel = (input: string): boolean => {
+  if (
+    input == 'info' ||
+    input == 'warn' ||
+    input == 'error' ||
+    input == 'critical'
+  ) {
+    return true;
+  } else return false;
+};
+
+//returns true if the input is a valid request method, else returns false
+export const isReqMethod = (input: string): boolean => {
+  input = input.toUpperCase();
+  if (
+    input == 'GET' ||
+    input == 'POST' ||
+    input == 'PATCH' ||
+    input == 'DELETE'
+  ) {
+    return true;
+  } else return false;
+};
+
+//returns true if the input is a valid response code, else returns false
+export const isResCode = (input: string): boolean => {
+  const inputNum = parseInt(input);
+  if (
+    !isNaN(inputNum) &&
+    (inputNum == 200 ||
+      inputNum == 201 ||
+      inputNum == 400 ||
+      inputNum == 401 ||
+      inputNum == 403 ||
+      inputNum == 409 ||
+      inputNum == 429 ||
+      inputNum == 500)
+  ) {
+    return true;
+  } else return false;
+};
+
+//returns true if the input is a valid url, else returns false
+//TODO add more endpoint strings as they are added to the project
+export const isEndpoint = (input: string): boolean => {
+  if (
+    input == 'user' ||
+    input == 'entry' ||
+    input == 'log' ||
+    input == 'session' ||
+    input == 'auth'
   ) {
     return true;
   } else return false;

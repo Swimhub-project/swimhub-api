@@ -11,7 +11,7 @@ The project is written in Express.js and Typescript, and connects to the followi
 Other packages include:
 
 - Prisma - ORM connected to PostgreSQL database.
-- Mongoose - ORM connected to MongoDB database.
+- Mongoose - ODM connected to MongoDB database.
 - Sendgrid - Automated emails for user authentication and error log notification.
 - Express-Session - Session token creation and storage
 - Jest and Supertest - Unit testing endpoints.

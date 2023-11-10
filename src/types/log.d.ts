@@ -1,6 +1,7 @@
 type LogLevel = 'info' | 'warn' | 'error' | 'critical';
 type ReqMethod = 'GET' | 'POST' | 'PATCH' | 'DELETE';
 type ResCode = 200 | 201 | 400 | 401 | 403 | 409 | 429 | 500;
+type Endpoint = 'user' | 'entry' | 'log' | 'session' | 'auth';
 
 /*
   Log Levels
@@ -25,4 +26,13 @@ export interface LogData {
   timestamp: Date;
   request: LogRequestData;
   responseCode: ResCode;
+}
+
+export interface LogSearchData {
+  level?: LogLevel;
+  method?: ReqMethod;
+  timestamp?: { $gte?: Date; $lte?: Date };
+  code?: ResCode;
+  url?: string;
+  ip?: string;
 }
