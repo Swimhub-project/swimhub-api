@@ -4,7 +4,7 @@ import { redisClient } from './lib/redis/client.redis';
 import mongoose from 'mongoose';
 
 //port and database variables - imported from .env file
-const port = 5000;
+const port = process.env.PORT || 5000;
 
 //currently active environment (development or production), used by email templates
 export let activeEnvironment: string;
