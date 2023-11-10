@@ -28,7 +28,7 @@ export const authenticate = (
       code: 401,
       message: 'No valid session found',
     };
-    // createLog('error', req, res, error);
+    createLog('error', req, res, error);
     next(err);
   } else {
     next();

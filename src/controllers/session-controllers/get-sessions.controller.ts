@@ -17,7 +17,7 @@ export const getSessions = async (req: Request, res: Response) => {
       message: 'Session store not found.',
     };
     res.status(404).json(error);
-    // createLog('error', req, res, error);
+    createLog('error', req, res, error);
     return;
   }
   //get all active user sessions
@@ -28,7 +28,7 @@ export const getSessions = async (req: Request, res: Response) => {
         message: (err as Error).message,
       };
       res.json(error);
-      // createLog('critical', req, res, error);
+      createLog('critical', req, res, error);
       return;
     }
     if (!sessions?.length) {
@@ -37,7 +37,7 @@ export const getSessions = async (req: Request, res: Response) => {
         message: 'No sessions found.',
       };
       res.status(404).json(error);
-      // createLog('error', req, res, error);
+      createLog('error', req, res, error);
       return;
     }
     res.status(200).json(sessions);

@@ -36,7 +36,7 @@ export const signInUser = async (req: Request, res: Response) => {
       params: missingParams,
     };
     res.status(400).json(error);
-    // createLog('error', req, res, error);
+    createLog('error', req, res, error);
     return;
   }
 
@@ -55,7 +55,7 @@ export const signInUser = async (req: Request, res: Response) => {
       params: emptyFields,
     };
     res.status(400).json(error);
-    // createLog('error', req, res, error);
+    createLog('error', req, res, error);
     return;
   }
 
@@ -67,7 +67,7 @@ export const signInUser = async (req: Request, res: Response) => {
       params: ['email'],
     };
     res.status(400).json(error);
-    // createLog('error', req, res, error);
+    createLog('error', req, res, error);
     return;
   }
 
@@ -79,7 +79,7 @@ export const signInUser = async (req: Request, res: Response) => {
       params: ['password'],
     };
     res.status(400).json(error);
-    // createLog('error', req, res, error);
+    createLog('error', req, res, error);
     return;
   }
 
@@ -99,7 +99,7 @@ export const signInUser = async (req: Request, res: Response) => {
       params: ['email'],
     };
     res.status(404).json(error);
-    // createLog('error', req, res, error);
+    createLog('error', req, res, error);
     return;
   }
 
@@ -112,7 +112,7 @@ export const signInUser = async (req: Request, res: Response) => {
       params: ['password'],
     };
     res.status(400).json(error);
-    // createLog('error', req, res, error);
+    createLog('error', req, res, error);
     return;
   }
 
@@ -136,7 +136,7 @@ export const signInUser = async (req: Request, res: Response) => {
     };
 
     res.status(200).json(user);
-    // createLog('info', req, res);
+    createLog('info', req, res);
     return;
   } catch (err) {
     const error: ErrorReturn = {
@@ -144,7 +144,7 @@ export const signInUser = async (req: Request, res: Response) => {
       message: (err as Error).message,
     };
     res.status(500).json(error);
-    // createLog('critical', req, res, error);
+    createLog('critical', req, res, error);
     return;
   }
 };

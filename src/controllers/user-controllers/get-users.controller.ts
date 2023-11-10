@@ -58,7 +58,7 @@ export const getUsers = async (req: Request, res: Response) => {
         params: ['email'],
       };
       res.status(400).json(error);
-      //createLog('error', req, res, error);
+      createLog('error', req, res, error);
       return;
     } else {
       email = email = escape(email as string).trim();
@@ -82,7 +82,7 @@ export const getUsers = async (req: Request, res: Response) => {
         params: ['role'],
       };
       res.status(400).json(error);
-      //createLog('error', req, res, error);
+      createLog('error', req, res, error);
       return;
     } else {
       role = escape(role as string).trim();
@@ -100,7 +100,7 @@ export const getUsers = async (req: Request, res: Response) => {
         params: ['status'],
       };
       res.status(400).json(error);
-      //createLog('error', req, res, error);
+      createLog('error', req, res, error);
       return;
     } else {
       status = escape(status as string).trim();
@@ -118,7 +118,7 @@ export const getUsers = async (req: Request, res: Response) => {
         params: ['teacher'],
       };
       res.status(400).json(error);
-      //createLog('error', req, res, error);
+      createLog('error', req, res, error);
       return;
     } else {
       teacher = escape(teacher as string).trim();
@@ -136,7 +136,7 @@ export const getUsers = async (req: Request, res: Response) => {
         params: ['biopublic'],
       };
       res.status(400).json(error);
-      //createLog('error', req, res, error);
+      createLog('error', req, res, error);
       return;
     } else {
       biopublic = escape(biopublic as string).trim();
@@ -156,7 +156,7 @@ export const getUsers = async (req: Request, res: Response) => {
         params: ['page'],
       };
       res.status(400).json(error);
-      //createLog('error', req, res, error);
+      createLog('error', req, res, error);
       return;
     } else {
       pageNum = parseInt(escape(page as string).trim());
@@ -173,7 +173,7 @@ export const getUsers = async (req: Request, res: Response) => {
         params: ['limit'],
       };
       res.status(400).json(error);
-      // createLog('error', req, res, error);
+      createLog('error', req, res, error);
       return;
     } else {
       if (parseInt(escape(limit as string).trim()) > 10) {
@@ -198,7 +198,7 @@ export const getUsers = async (req: Request, res: Response) => {
         message: 'No matching users found.',
       };
       res.status(404).json(error);
-      // createLog('error', req, res, error);
+      createLog('error', req, res, error);
       return;
     } else {
       try {
@@ -228,7 +228,7 @@ export const getUsers = async (req: Request, res: Response) => {
           message: (err as Error).message,
         };
         res.status(500).json(error);
-        // createLog('critical', req, res, error);
+        createLog('critical', req, res, error);
         return;
       }
     }
@@ -238,7 +238,7 @@ export const getUsers = async (req: Request, res: Response) => {
       message: (err as Error).message,
     };
     res.status(500).json(error);
-    // createLog('critical', req, res, error);
+    createLog('critical', req, res, error);
     return;
   }
 };

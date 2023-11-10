@@ -34,7 +34,7 @@ export const verifyEmail = async (req: Request, res: Response) => {
       params: missingParams,
     };
     res.status(400).json(error);
-    // createLog('error', req, res, error);
+    createLog('error', req, res, error);
     return;
   }
 
@@ -49,7 +49,7 @@ export const verifyEmail = async (req: Request, res: Response) => {
       params: ['token'],
     };
     res.status(404).json(error);
-    // createLog('error', req, res, error);
+    createLog('error', req, res, error);
     return;
   }
 
@@ -62,7 +62,7 @@ export const verifyEmail = async (req: Request, res: Response) => {
       params: ['token'],
     };
     res.status(401).json(error);
-    // createLog('error', req, res, error);
+    createLog('error', req, res, error);
     return;
   }
 
@@ -75,7 +75,7 @@ export const verifyEmail = async (req: Request, res: Response) => {
       params: ['userId'],
     };
     res.status(404).json(error);
-    // createLog('error', req, res, error);
+    createLog('error', req, res, error);
     return;
   }
 
@@ -90,7 +90,7 @@ export const verifyEmail = async (req: Request, res: Response) => {
     };
 
     res.status(409).json(error);
-    // createLog('error', req, res, error);
+    createLog('error', req, res, error);
     return;
   }
   //TODO talk to Steph about what to do once user is verified
@@ -110,7 +110,7 @@ export const verifyEmail = async (req: Request, res: Response) => {
     (req.session as ISession).email = user.email;
 
     res.sendStatus(200);
-    // createLog('info', req, res);
+    createLog('info', req, res);
     return;
   } catch (error) {
     res
