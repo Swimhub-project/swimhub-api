@@ -41,7 +41,7 @@ export const getLogs = async (req: Request, res: Response) => {
         params: ['level'],
       };
       res.status(400).json(error);
-      await createLog('error', req, res, error);
+      //createLog('error', req, res, error);
       return;
     } else {
       level = escape(level as string).trim();
@@ -59,7 +59,7 @@ export const getLogs = async (req: Request, res: Response) => {
         params: ['method'],
       };
       res.status(400).json(error);
-      await createLog('error', req, res, error);
+      //createLog('error', req, res, error);
       return;
     } else {
       method = escape(method as string).trim();
@@ -77,7 +77,7 @@ export const getLogs = async (req: Request, res: Response) => {
         params: ['before'],
       };
       res.status(400).json(error);
-      await createLog('error', req, res, error);
+      //createLog('error', req, res, error);
       return;
     } else {
       before = escape(before as string).trim();
@@ -99,7 +99,7 @@ export const getLogs = async (req: Request, res: Response) => {
         params: ['after'],
       };
       res.status(400).json(error);
-      await createLog('error', req, res, error);
+      //createLog('error', req, res, error);
       return;
     } else {
       after = escape(after as string).trim();
@@ -121,7 +121,7 @@ export const getLogs = async (req: Request, res: Response) => {
         params: ['code'],
       };
       res.status(400).json(error);
-      await createLog('error', req, res, error);
+      //createLog('error', req, res, error);
       return;
     } else {
       code = escape(code as string).trim();
@@ -139,7 +139,7 @@ export const getLogs = async (req: Request, res: Response) => {
         params: ['endpoint'],
       };
       res.status(400).json(error);
-      await createLog('error', req, res, error);
+      // createLog('error', req, res, error);
       return;
     } else {
       endpoint = escape(endpoint as string).trim();
@@ -178,7 +178,7 @@ export const getLogs = async (req: Request, res: Response) => {
         params: ['page'],
       };
       res.status(400).json(error);
-      await createLog('error', req, res, error);
+      // createLog('error', req, res, error);
       return;
     } else {
       pageNum = parseInt(escape(page as string).trim());
@@ -195,7 +195,7 @@ export const getLogs = async (req: Request, res: Response) => {
         params: ['limit'],
       };
       res.status(400).json(error);
-      createLog('error', req, res, error);
+      // createLog('error', req, res, error);
       return;
     } else {
       if (parseInt(escape(limit as string).trim()) > 10) {
@@ -219,7 +219,7 @@ export const getLogs = async (req: Request, res: Response) => {
       code: 500,
       message: (err as Error).message,
     };
-    createLog('critical', req, res, error);
+    // createLog('critical', req, res, error);
     return;
   }
 };
