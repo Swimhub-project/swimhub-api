@@ -31,10 +31,11 @@ export interface LogData {
 export interface LogSearchData {
   level?: LogLevel;
   timestamp?: { $gte?: Date; $lte?: Date };
-  code?: ResCode;
-  request?: {
-    method?: ReqMethod;
-    url?: string;
-    ip?: string;
-  };
+  responseCode?: string;
+  // request?: {
+  // method?: ReqMethod;
+  // url?: { $regex: RegExp; $options: string };
+  // ip?: string;
+  // };
+  request?: any;
 }

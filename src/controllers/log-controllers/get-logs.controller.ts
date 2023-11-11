@@ -51,27 +51,29 @@ export const getLogs = async (req: Request, res: Response) => {
     }
   }
 
-  if (method) {
-    if (!isReqMethod(method as string)) {
-      const error: ErrorReturn = {
-        code: 400,
-        message: 'Invalid "method" search parameter.',
-        params: ['method'],
-      };
-      res.status(400).json(error);
-      createLog('error', req, res, error);
-      return;
-    } else {
-      method = escape(method as string).trim();
-      if (!isEmpty(method, { ignore_whitespace: true })) {
-        if (searchData.request) {
-          searchData.request.method = method as ReqMethod;
-        } else {
-          searchData.request = { method: method.toUpperCase() as ReqMethod };
-        }
-      }
-    }
-  }
+  // if (method) {
+  //   if (!isReqMethod(method as string)) {
+  //     const error: ErrorReturn = {
+  //       code: 400,
+  //       message: 'Invalid "method" search parameter.',
+  //       params: ['method'],
+  //     };
+  //     res.status(400).json(error);
+  //     createLog('error', req, res, error);
+  //     return;
+  //   } else {
+  //     method = escape(method as string).trim();
+  //     if (!isEmpty(method, { ignore_whitespace: true })) {
+  //       if (searchData.request) {
+  //         searchData.request.method = method as ReqMethod;
+  //       } else {
+  //         searchData.request = {
+  //           $match: { method: method.toUpperCase() as ReqMethod },
+  //         };
+  //       }
+  //     }
+  //   }
+  // }
 
   if (before) {
     if (!isDate(before as string)) {
@@ -130,54 +132,59 @@ export const getLogs = async (req: Request, res: Response) => {
     } else {
       code = escape(code as string).trim();
       if (!isEmpty(code, { ignore_whitespace: true })) {
-        searchData.code = parseInt(code) as ResCode;
+        searchData.responseCode = code;
       }
     }
   }
 
-  if (endpoint) {
-    if (!isEndpoint(endpoint as string)) {
-      const error: ErrorReturn = {
-        code: 400,
-        message: 'Invalid "endpoint" search parameter.',
-        params: ['endpoint'],
-      };
-      res.status(400).json(error);
-      createLog('error', req, res, error);
-      return;
-    } else {
-      endpoint = escape(endpoint as string).trim();
-      if (!isEmpty(endpoint, { ignore_whitespace: true })) {
-        if (searchData.request) {
-          searchData.request.url = `/${endpoint}/i`;
-        } else {
-          searchData.request = { url: `/${endpoint}/i` };
-        }
-      }
-    }
-  }
+  // if (endpoint) {
+  //   if (!isEndpoint(endpoint as string)) {
+  //     const error: ErrorReturn = {
+  //       code: 400,
+  //       message: 'Invalid "endpoint" search parameter.',
+  //       params: ['endpoint'],
+  //     };
+  //     res.status(400).json(error);
+  //     createLog('error', req, res, error);
+  //     return;
+  //   } else {
+  //     endpoint = escape(endpoint as string).trim();
+  //     if (!isEmpty(endpoint, { ignore_whitespace: true })) {
+  //       if (searchData.request) {
+  //         searchData.request.url = {
+  //           $regex: new RegExp(endpoint),
+  //           $options: 'i',
+  //         };
+  //       } else {
+  //         searchData.request = {
+  //           url: { $regex: new RegExp(endpoint), $options: 'i' },
+  //         };
+  //       }
+  //     }
+  //   }
+  // }
 
-  if (ip) {
-    if (!isIP(ip as string)) {
-      const error: ErrorReturn = {
-        code: 400,
-        message: 'Invalid "ip" search parameter.',
-        params: ['ip'],
-      };
-      res.status(400).json(error);
-      await createLog('error', req, res, error);
-      return;
-    } else {
-      ip = escape(ip as string).trim();
-      if (!isEmpty(ip, { ignore_whitespace: true })) {
-        if (searchData.request) {
-          searchData.request.ip = ip;
-        } else {
-          searchData.request = { ip: ip };
-        }
-      }
-    }
-  }
+  // if (ip) {
+  //   if (!isIP(ip as string)) {
+  //     const error: ErrorReturn = {
+  //       code: 400,
+  //       message: 'Invalid "ip" search parameter.',
+  //       params: ['ip'],
+  //     };
+  //     res.status(400).json(error);
+  //     await createLog('error', req, res, error);
+  //     return;
+  //   } else {
+  //     ip = escape(ip as string).trim();
+  //     if (!isEmpty(ip, { ignore_whitespace: true })) {
+  //       if (searchData.request) {
+  //         searchData.request.ip = ip;
+  //       } else {
+  //         searchData.request = { ip: ip };
+  //       }
+  //     }
+  //   }
+  // }
 
   //validate and set the correct page number for page pagination
   let pageNum: number = 1;
@@ -224,6 +231,10 @@ export const getLogs = async (req: Request, res: Response) => {
       limit: limitNum,
     };
 
+    /* 
+      Query uses mongoose-paginate-v2 plugin. 
+      For more details see https://www.npmjs.com/package/mongoose-paginate-v2
+     */
     const logs = await Log.paginate(searchData, options);
 
     const result = {
