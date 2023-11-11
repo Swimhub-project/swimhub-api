@@ -30,9 +30,11 @@ export interface LogData {
 
 export interface LogSearchData {
   level?: LogLevel;
-  method?: ReqMethod;
   timestamp?: { $gte?: Date; $lte?: Date };
   code?: ResCode;
-  url?: string;
-  ip?: string;
+  request?: {
+    method?: ReqMethod;
+    url?: string;
+    ip?: string;
+  };
 }

@@ -135,7 +135,11 @@ export const isEndpoint = (input: string): boolean => {
     input == 'entry' ||
     input == 'log' ||
     input == 'session' ||
-    input == 'auth'
+    input == 'signin' ||
+    input == 'signup' ||
+    input == 'verify' ||
+    input == 'resend_verify' ||
+    input == 'reset_password'
   ) {
     return true;
   } else return false;

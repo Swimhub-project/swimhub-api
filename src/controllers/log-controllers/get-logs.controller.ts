@@ -64,7 +64,11 @@ export const getLogs = async (req: Request, res: Response) => {
     } else {
       method = escape(method as string).trim();
       if (!isEmpty(method, { ignore_whitespace: true })) {
-        searchData.method = method as ReqMethod;
+        if (searchData.request) {
+          searchData.request.method = method as ReqMethod;
+        } else {
+          searchData.request = { method: method.toUpperCase() as ReqMethod };
+        }
       }
     }
   }
@@ -144,29 +148,36 @@ export const getLogs = async (req: Request, res: Response) => {
     } else {
       endpoint = escape(endpoint as string).trim();
       if (!isEmpty(endpoint, { ignore_whitespace: true })) {
-        searchData.url = endpoint;
+        if (searchData.request) {
+          searchData.request.url = `/${endpoint}/i`;
+        } else {
+          searchData.request = { url: `/${endpoint}/i` };
+        }
       }
     }
   }
 
-  //TODO fix the below code (it's broken!)
-  // if (ip) {
-  //   if (!isIP(ip as string)) {
-  //     const error: ErrorReturn = {
-  //       code: 400,
-  //       message: 'Invalid "ip" search parameter.',
-  //       params: ['ip'],
-  //     };
-  //     res.status(400).json(error);
-  //     await createLog('error', req, res, error);
-  //     return;
-  //   }
-  // } else {
-  //   ip = escape(ip as string).trim();
-  //   if (!isEmpty(ip, { ignore_whitespace: true })) {
-  //     searchData.ip = ip;
-  //   }
-  // }
+  if (ip) {
+    if (!isIP(ip as string)) {
+      const error: ErrorReturn = {
+        code: 400,
+        message: 'Invalid "ip" search parameter.',
+        params: ['ip'],
+      };
+      res.status(400).json(error);
+      await createLog('error', req, res, error);
+      return;
+    } else {
+      ip = escape(ip as string).trim();
+      if (!isEmpty(ip, { ignore_whitespace: true })) {
+        if (searchData.request) {
+          searchData.request.ip = ip;
+        } else {
+          searchData.request = { ip: ip };
+        }
+      }
+    }
+  }
 
   //validate and set the correct page number for page pagination
   let pageNum: number = 1;
@@ -206,13 +217,23 @@ export const getLogs = async (req: Request, res: Response) => {
     }
   }
 
-  //TODO make sure searchData matches up with database fields (nested objects)
-  //TODO set up proper pagination of request
-
   //fetch logs from database
   try {
-    const logs = await Log.find({});
-    res.status(200).json(logs);
+    const options = {
+      page: pageNum,
+      limit: limitNum,
+    };
+
+    const logs = await Log.paginate(searchData, options);
+
+    const result = {
+      currentPage: pageNum,
+      totalPages: logs.totalPages,
+      numberOfResults: logs.docs.length,
+      totalNumberOfResults: logs.totalDocs,
+      logs: logs.docs,
+    };
+    res.status(200).json(result);
     return;
   } catch (err) {
     const error: ErrorReturn = {

@@ -1,4 +1,5 @@
 import mongoose, { model } from 'mongoose';
+import paginate from 'mongoose-paginate-v2';
 import { LogRequestData, LogData } from '../../types/log';
 const { Schema } = mongoose;
 
@@ -17,7 +18,7 @@ const logRequestDataSchema = new Schema<LogRequestData>(
   { _id: false }
 );
 
-const logSchema = new Schema<LogData>(
+const logSchema = new Schema(
   {
     level: {
       type: String,
@@ -44,4 +45,12 @@ const logSchema = new Schema<LogData>(
   { versionKey: false }
 );
 
-export const Log = model('Log', logSchema);
+logSchema.plugin(paginate);
+
+interface LogDocument extends mongoose.Document, LogData {}
+
+export const Log = model<LogDocument, mongoose.PaginateModel<LogDocument>>(
+  'Log',
+  logSchema,
+  'logs'
+);
