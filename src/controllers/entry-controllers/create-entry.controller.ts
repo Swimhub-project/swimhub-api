@@ -116,6 +116,7 @@ export const createEntry = async (req: Request, res: Response) => {
     };
     res.status(400).json(error);
     createLog('error', req, res, error);
+    return;
   }
 
   if (!isEntryStroke(stroke)) {
@@ -126,17 +127,23 @@ export const createEntry = async (req: Request, res: Response) => {
     };
     res.status(400).json(error);
     createLog('error', req, res, error);
+    return;
   }
-  stage.forEach((stage: string, index: number) => {
-    if (!isEntryStage(stage)) {
+
+  for (let i = 0; i < stage.length; i++) {
+    if (!isEntryStage(stage[i])) {
       const error: ErrorReturn = {
         code: 400,
-        message: 'Invalid Entry Stage',
-        params: [`stage[${index}]`],
+        message: `Invalid Entry Stage`,
+        params: [`stage[${i}]`],
       };
       res.status(400).json(error);
-      createLog('error', req, res, error);
+      return;
     }
+  }
+
+  teachingPoints = teachingPoints.map((item: string) => {
+    return escape(item).trim();
   });
 
   const entryData = {

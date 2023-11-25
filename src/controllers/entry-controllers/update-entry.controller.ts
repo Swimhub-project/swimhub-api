@@ -7,4 +7,4 @@
 //import packages
 import { Request, Response } from 'express';
 
-export const updateEntry = (req: Request, res: Response) => {};
+export const updateEntry = async (req: Request, res: Response) => {};
