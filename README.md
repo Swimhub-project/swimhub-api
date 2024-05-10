@@ -21,6 +21,26 @@ Other packages include:
 - Node v18
 - npm v9
 
+## Folder Structure
+
+Below is an outline of the main folders and files within the project:
+
+```
+/swimhub-api/            # root directory
+├── dist/                # Production ready javascript files
+├── src/
+│ ├── controllers        # Controller functions for specific API calls
+│ ├── lib                # Database setup, schema and config files
+│ ├── middleware         # Custom rate-limit and authentication middleware
+│ ├── routes             # Declares all API routes
+│ ├── services           # Email, Logging and Session code
+│ ├── tests              # Unit tests for API
+│ ├── types              # Decalres all typescript types and interfaces
+│ ├── utils              # Globally used functions and email templates
+  └── app.ts             # Initialises Express app
+  └── server.ts          # Starts Express server and connects to databases
+```
+
 ## Installation
 
 To run the project locally you will need to connect to your own PostgreSQL, MongoDB and Redis databases. To use the automated email functionality you will also need a Sendgrid account.
@@ -51,6 +71,10 @@ To run the project locally you will need to connect to your own PostgreSQL, Mong
 4. Run the command `npx prisma db seed` to generate random entries linked to the users.
 
 If you wish to change the number of seeds generated, change the `genCount` constant in the corresponding seed file.
+
+## Building to production
+
+To compile all the Typescript files into Javascript, use the `npm run build` command. This will generate a **"dist"** folder that can be used to deploy the API.
 
 ## Usage
 

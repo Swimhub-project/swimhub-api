@@ -23,7 +23,7 @@ export const rateLimiter = async (
   //get IP address of device making the request
   const ip = req.socket.remoteAddress;
   if (ip) {
-    //update total number of request attempts and check if the limit has been reached
+    //if there's a valid ip address, update total number of request attempts and check if the limit has been reached
     const response = await redisClient.multi().incr(ip).expire(ip, 60).exec();
     if ((response[0] as number) > 100) {
       //TODO change limit to 10 for production
